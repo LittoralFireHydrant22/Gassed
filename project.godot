@@ -11,4 +11,5 @@ config_version=5
 [application]
 
 config/name="Gassed"
+run/main_scene="uid://dqtiui6yqha3h"
 config/features=PackedStringArray("4.4", "Forward Plus")
