@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dltq78u5sleed"]
+
+[ext_resource type="PackedScene" uid="uid://dltq78u5sleed" path="res://sprites/player.tscn" id="1_wf2ox"]
+
+[node name="CharacterBody2D" instance=ExtResource("1_wf2ox")]
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+position = Vector2(543, 131)
+frame_progress = 0.938749

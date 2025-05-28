@@ -1,13 +1,37 @@
 [gd_scene load_steps=32 format=3 uid="uid://dqtiui6yqha3h"]
 
 [ext_resource type="Texture2D" uid="uid://cikur0g2438ib" path="res://sprites/player.png" id="1_f3sb7"]
-[ext_resource type="Script" uid="uid://p8ve4bc51ju5" path="res://player_controls.gd" id="1_fj7yv"]
+[ext_resource type="Script" uid="uid://p8ve4bc51ju5" path="res://scripts/player_controls.gd" id="1_fj7yv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fj7yv"]
 size = Vector2(1151, 20)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tlwt5"]
 height = 26.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hiqwa"]
+atlas = ExtResource("1_f3sb7")
+region = Rect2(0, 1280, 288, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2u3nc"]
+atlas = ExtResource("1_f3sb7")
+region = Rect2(288, 1280, 288, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_udxuc"]
+atlas = ExtResource("1_f3sb7")
+region = Rect2(576, 1280, 288, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ikiii"]
+atlas = ExtResource("1_f3sb7")
+region = Rect2(864, 1280, 288, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cbp6q"]
+atlas = ExtResource("1_f3sb7")
+region = Rect2(1152, 1280, 288, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_26xuy"]
+atlas = ExtResource("1_f3sb7")
+region = Rect2(1440, 1280, 288, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aqk2v"]
 atlas = ExtResource("1_f3sb7")
@@ -57,30 +81,6 @@ region = Rect2(288, 256, 288, 128)
 atlas = ExtResource("1_f3sb7")
 region = Rect2(576, 256, 288, 128)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_hiqwa"]
-atlas = ExtResource("1_f3sb7")
-region = Rect2(0, 1280, 288, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2u3nc"]
-atlas = ExtResource("1_f3sb7")
-region = Rect2(288, 1280, 288, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_udxuc"]
-atlas = ExtResource("1_f3sb7")
-region = Rect2(576, 1280, 288, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ikiii"]
-atlas = ExtResource("1_f3sb7")
-region = Rect2(864, 1280, 288, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_cbp6q"]
-atlas = ExtResource("1_f3sb7")
-region = Rect2(1152, 1280, 288, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_26xuy"]
-atlas = ExtResource("1_f3sb7")
-region = Rect2(1440, 1280, 288, 128)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_bc84e"]
 atlas = ExtResource("1_f3sb7")
 region = Rect2(0, 128, 288, 128)
@@ -115,6 +115,29 @@ region = Rect2(2016, 128, 288, 128)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_wse8f"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hiqwa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2u3nc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_udxuc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ikiii")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cbp6q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_26xuy")
+}],
+"loop": true,
+"name": &"dash",
+"speed": 10.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_aqk2v")
@@ -168,29 +191,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_hiqwa")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_2u3nc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_udxuc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ikiii")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_cbp6q")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_26xuy")
-}],
-"loop": true,
-"name": &"roll",
-"speed": 10.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_bc84e")
 }, {
 "duration": 1.0,
@@ -229,15 +229,6 @@ shape = SubResource("RectangleShape2D_fj7yv")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
 script = ExtResource("1_fj7yv")
-input_left = null
-input_right = null
-input_jump = null
-input_dash = null
-speed = null
-jump_velocity = null
-dash_speed = null
-dash_time = null
-slide_time = null
 
 [node name="NormalCollision" type="CollisionShape2D" parent="CharacterBody2D"]
 position = Vector2(542, 154)
@@ -247,6 +238,6 @@ shape = SubResource("CapsuleShape2D_tlwt5")
 position = Vector2(542.5, 130.625)
 scale = Vector2(0.753472, 0.619141)
 sprite_frames = SubResource("SpriteFrames_wse8f")
-animation = &"run"
+animation = &"jump_up"
 autoplay = "jump_up"
-frame_progress = 0.217388
+frame_progress = 0.433195
