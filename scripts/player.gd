@@ -83,6 +83,7 @@ func update_movement(delta: float):
 		State.FALLING:
 			if direction == 0:
 				velocity.x = direction * speed
+			animated_sprite.flip_h = direction <0
 		State.DASHING:
 			velocity = dash_direction * dash_speed
 
