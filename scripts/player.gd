@@ -100,7 +100,7 @@ func handle_input():
 	# Manual respawn for testing (press R key)
 	if Input.is_action_just_pressed("ui_cancel"):  # ESC key
 		print("Manual respawn triggered")
-		respawn_player()
+		trigger_respawn()
 	
 	match current_state:
 		State.IDLE, State.RUNNING:
@@ -168,38 +168,48 @@ func check_screen_boundaries():
 		player_left_screen.emit()
 		handle_screen_boundary()
 
+func trigger_respawn():
+	print("=== RESPAWN TRIGGERED ===")
+	print("Setting respawn flag")
+	respawn_flag = true
+
+func force_respawn():
+	print("=== FORCE RESPAWN EXECUTING ===")
+	print("Before: position =", position, "global_position =", global_position)
+	
+	# Stop all movement and reset state
+	velocity = Vector2.ZERO
+	current_state = State.IDLE
+	can_double_jump = false
+	has_double_jumped = false
+	dash_cooldown_timer = 0.0
+	dash_timer = 0.0
+	
+	# Force position (try multiple ways)
+	position = Vector2(100, 100)
+	global_position = Vector2(100, 100)
+	
+	# Use transform as backup
+	transform.origin = Vector2(100, 100)
+	
+	print("After: position =", position, "global_position =", global_position)
+	
+	# Clear the respawn flag
+	respawn_flag = false
+	
+	player_respawned.emit()
+	print("=== RESPAWN COMPLETE ===")
+
 func handle_screen_boundary():
 	match screen_boundary_action:
 		"respawn":
-			respawn_player()
+			trigger_respawn()
 		"clamp":
 			clamp_to_screen()
 		"wrap":
 			wrap_around_screen()
 		"none":
 			pass  # Do nothing, let other systems handle it
-
-func respawn_player():
-	print("=== RESPAWN DEBUG ===")
-	print("Before respawn - Player position: ", global_position)
-	print("Respawn position variable: ", respawn_position)
-	print("Setting global_position to: ", Vector2(100, 100))
-	
-	# Force set to exactly (100, 100) for testing
-	global_position = Vector2(100, 100)
-	position = Vector2(100, 100)  # Try both global_position and position
-	
-	velocity = Vector2.ZERO
-	current_state = State.IDLE
-	can_double_jump = false
-	has_double_jumped = false
-	dash_cooldown_timer = 0.0
-	
-	print("After respawn - Player position: ", global_position)
-	print("After respawn - Local position: ", position)
-	print("=== END RESPAWN DEBUG ===")
-	
-	player_respawned.emit()
 
 func clamp_to_screen():
 	var camera = get_viewport().get_camera_2d()

@@ -220,19 +220,6 @@ height = 16.0
 [node name="CharacterBody2D" type="CharacterBody2D"]
 position = Vector2(453, 416)
 script = ExtResource("1_8yuya")
-input_left = null
-input_right = null
-input_jump = null
-input_dash = null
-speed = null
-jump_velocity = null
-dash_speed = null
-dash_time = null
-dash_cooldown = null
-coyote_time = null
-jump_buffer_time = null
-screen_boundary_action = null
-respawn_position = null
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(1.49999, -11)

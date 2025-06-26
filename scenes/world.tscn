@@ -16,3 +16,16 @@ shape = SubResource("RectangleShape2D_fj7yv")
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("1_nnsk1")]
 position = Vector2(764, 325)
+input_left = "ui_left"
+input_right = "ui_right"
+input_jump = "ui_accept"
+input_dash = "ui_select"
+speed = 105.0
+jump_velocity = -300.0
+dash_speed = 210.0
+dash_time = 0.3
+dash_cooldown = 1.0
+coyote_time = 0.1
+jump_buffer_time = 0.15
+screen_boundary_action = "respawn"
+respawn_position = Vector2(100, 100)

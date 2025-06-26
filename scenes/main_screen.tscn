@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://doqjyhrceap1q"]
 
 [ext_resource type="Texture2D" uid="uid://cc00wag3qhqcv" path="res://Tileset/Mine tilemap/Mine.png" id="1_7fvvs"]
-[ext_resource type="Texture2D" uid="uid://nynhw0ufpyen" path="res://New Piskel (6).png" id="2_kusfh"]
+[ext_resource type="Texture2D" uid="uid://nynhw0ufpyen" path="res://Tileset/New Piskel (6).png" id="2_kusfh"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_w0p2i"]
 texture = ExtResource("1_7fvvs")

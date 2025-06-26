@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://d15jrugfhqrue"]
+
+[ext_resource type="Texture2D" uid="uid://fp88his7ksii" path="res://sprites/Miner Sprite (1).png" id="1_ryv3l"]
+
+[node name="MinerSprite(1)" type="Sprite2D"]
+position = Vector2(386, 222)
+texture = ExtResource("1_ryv3l")

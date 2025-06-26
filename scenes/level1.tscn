@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=4 uid="uid://dxm7dgdlm5k1d"]
+[gd_scene load_steps=6 format=4 uid="uid://dxm7dgdlm5k1d"]
 
 [ext_resource type="Texture2D" uid="uid://cc00wag3qhqcv" path="res://Tileset/Mine tilemap/Mine.png" id="1_g2h75"]
 [ext_resource type="PackedScene" uid="uid://bj5n44w2p6g03" path="res://sprites/player.tscn" id="2_wwpf4"]
+[ext_resource type="Texture2D" uid="uid://fp88his7ksii" path="res://sprites/Miner Sprite (1).png" id="3_m7ahb"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wwpf4"]
 texture = ExtResource("1_g2h75")
@@ -226,3 +227,8 @@ tile_set = SubResource("TileSet_ootpb")
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("2_wwpf4")]
 position = Vector2(44, 31)
+
+[node name="MinerSprite(1)" type="Sprite2D" parent="."]
+position = Vector2(26, 584.5)
+scale = Vector2(0.3125, 0.234375)
+texture = ExtResource("3_m7ahb")
