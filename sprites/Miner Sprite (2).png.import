@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fp88his7ksii"
-path="res://.godot/imported/Miner Sprite (1).png-ac1c862d69c3d82f06839d8c6cc39702.ctex"
+uid="uid://bq6vo0ctvh8px"
+path="res://.godot/imported/Miner Sprite (2).png-7830e57e8f0b05f9487284002ae14e06.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/Miner Sprite (1).png"
-dest_files=["res://.godot/imported/Miner Sprite (1).png-ac1c862d69c3d82f06839d8c6cc39702.ctex"]
+source_file="res://sprites/Miner Sprite (2).png"
+dest_files=["res://.godot/imported/Miner Sprite (2).png-7830e57e8f0b05f9487284002ae14e06.ctex"]
 
 [params]
 
