@@ -16,7 +16,7 @@ enum State { IDLE, RUNNING, JUMPING, FALLING, DASHING }
 @export var coyote_time: float = 0.1  # Grace period for jumping after leaving ground
 @export var jump_buffer_time: float = 0.15  # Buffer for early jump inputs
 @export var screen_boundary_action: String = "respawn"  # "respawn", "clamp", "wrap", or "none"
-@export var respawn_position: Vector2 = Vector2(100, 100)  # Where to respawn player
+@export var respawn_position: Vector2 = Vector2(50, 50)  # Where to respawn player
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var current_state: State = State.IDLE
@@ -186,11 +186,11 @@ func force_respawn():
 	dash_timer = 0.0
 	
 	# Force position (try multiple ways)
-	position = Vector2(100, 100)
-	global_position = Vector2(100, 100)
+	position = Vector2(56, 37)
+	global_position = Vector2(56, 37)
 	
 	# Use transform as backup
-	transform.origin = Vector2(100, 100)
+	transform.origin = Vector2(56, 37)
 	
 	print("After: position =", position, "global_position =", global_position)
 	
