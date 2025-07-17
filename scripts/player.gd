@@ -14,7 +14,7 @@ enum State { IDLE, RUNNING, JUMPING, FALLING, DASHING }
 @export var friction_multiplier: float = 8.0
 @export var air_control: float = 0.9
 @export var coyote_time: float = 0.15  # Increased for easier testing
-@export var jump_buffer_time: float = 0.1
+@export var jump_buffer_time: float = 0.2
 @export var screen_boundary_action: String = "respawn"
 @export var respawn_position: Vector2 = Vector2(50, 50)
 
@@ -97,12 +97,12 @@ func handle_coyote_time():
 		if not left_ground_by_jumping:
 			print("Left ground by walking - starting coyote timer")
 			coyote_timer = coyote_time
-			can_coyote_jump_flag = true  # Allow coyote jumping
+			can_coyote_jump_flag = true  # Allow coyote jumping only if we didn't jump
 		else:
 			print("Left ground by jumping - no coyote time")
 			can_coyote_jump_flag = false
 		
-		# Enable double jump when leaving ground
+		# Enable double jump when leaving ground, but only if not already jumped
 		if not can_double_jump and not has_double_jumped:
 			can_double_jump = true
 
@@ -135,7 +135,7 @@ func handle_input():
 				start_dash()
 			elif moving:
 				current_state = State.RUNNING
-			else:	
+			else:    
 				if current_state == State.RUNNING and abs(velocity.x) < 10:
 					current_state = State.IDLE
 				elif current_state == State.IDLE:
@@ -156,9 +156,45 @@ func handle_input():
 				current_state = State.IDLE if abs(velocity.x) < 10 else State.RUNNING
 		
 		State.DASHING:
-			dash_timer -= get_physics_process_delta_time()
-			if dash_timer <= 0:
-				current_state = State.FALLING if not is_on_floor() else State.IDLE
+			# Handle jump-cancel during dash
+			if can_jump() and jump_buffer_timer > 0:
+				print("Jump-canceling dash!")
+				cancel_dash_with_jump()
+				jump_buffer_timer = 0
+			else:
+				dash_timer -= get_physics_process_delta_time()
+				if dash_timer <= 0:
+					current_state = State.FALLING if not is_on_floor() else State.IDLE
+
+func cancel_dash_with_jump():
+	# Stop the dash
+	dash_timer = 0.0
+	
+	# Preserve horizontal momentum from dash (optional - you can remove this if you want)
+	var horizontal_momentum = velocity.x * 0.5  # Reduce momentum by half
+	
+	# Apply jump velocity
+	velocity.y = jump_velocity
+	velocity.x = horizontal_momentum
+	
+	# Set appropriate jump state
+	if is_double_jump_available():
+		# If we can double jump, use it
+		has_double_jumped = true
+		can_double_jump = false
+		print("Dash canceled with double jump!")
+	elif can_coyote_jump():
+		# If we can coyote jump, use it
+		coyote_jump()
+		return  # coyote_jump() handles state change
+	else:
+		# Regular jump state
+		can_double_jump = true
+		has_double_jumped = false
+		print("Dash canceled with regular jump!")
+	
+	left_ground_by_jumping = true
+	current_state = State.JUMPING
 
 func check_screen_boundaries():
 	var camera = get_viewport().get_camera_2d()
@@ -322,6 +358,7 @@ func double_jump():
 	has_double_jumped = true
 	can_double_jump = false
 	left_ground_by_jumping = true  # Mark that we left ground by jumping
+	current_state = State.JUMPING
 
 func update_movement(delta: float):
 	var direction = Input.get_axis(input_left, input_right)
