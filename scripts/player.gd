@@ -6,34 +6,33 @@ enum State { IDLE, RUNNING, JUMPING, FALLING, DASHING }
 @export var input_right: String = "ui_right"
 @export var input_jump: String = "ui_accept"
 @export var input_dash: String = "ui_select"
-@export var speed: float = 105.0
+@export var speed: float = 150.0
 @export var jump_velocity: float = -300.0
-@export var dash_speed: float = 280.0
-@export var dash_time: float = 0.3
+@export var dash_speed: float = 350.0
+@export var dash_time: float = 0.25
 @export var dash_cooldown: float = 2.0
 @export var friction_multiplier: float = 8.0
-@export var air_control: float = 0.9
-@export var coyote_time: float = 0.15  # Increased for easier testing
+@export var air_control: float = 1
+@export var coyote_time: float = 0.15 
 @export var jump_buffer_time: float = 0.2
 @export var screen_boundary_action: String = "respawn"
 @export var respawn_position: Vector2 = Vector2(50, 50)
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var current_state: State = State.IDLE
-var can_double_jump: bool = false
-var has_double_jumped: bool = false
+var jumps_remaining: int = 2  # Total jumps allowed (ground + air)
+var max_jumps: int = 2  # Maximum total jumps
 var dash_timer: float = 0.0
 var dash_cooldown_timer: float = 0.0
 var dash_direction: Vector2 = Vector2.ZERO
 var coyote_timer: float = 0.0
 var jump_buffer_timer: float = 0.0
 var was_on_floor: bool = false
-var can_coyote_jump_flag: bool = false  # Simple flag for coyote jumping
-var left_ground_by_jumping: bool = false  # Track if we left ground by jumping
+var can_coyote_jump_flag: bool = false
+var left_ground_by_jumping: bool = false
 var screen_size: Vector2
 var respawn_flag: bool = false
 
-# Signals for screen boundary events
 signal player_left_screen
 signal player_respawned
 signal checkpoint_reached(position: Vector2)
@@ -42,41 +41,28 @@ signal checkpoint_reached(position: Vector2)
 
 func _ready():
 	screen_size = get_viewport().get_visible_rect().size
-	print("Initial respawn position: ", respawn_position)
-	print("Screen boundary action: ", screen_boundary_action)
 
 func _physics_process(delta: float):
-	# Handle respawn flag first, before any other processing
 	if respawn_flag:
 		force_respawn()
 		return
 	
-	# Update timers
 	update_timers(delta)
 	
-	# Apply gravity when not on floor and not dashing
 	if not is_on_floor() and current_state != State.DASHING:
 		velocity.y += gravity * delta
 	
-	# Handle coyote time
 	handle_coyote_time()
-	
-	# Handle input, update movement, and play animations
 	handle_input()
 	update_movement(delta)
 	play_animation()
 	move_and_slide()
-	
-	# Check screen boundaries
 	check_screen_boundaries()
 	
-	# Reset states when landing
 	if is_on_floor() and not was_on_floor:
-		print("Landed on floor - resetting flags")
-		can_double_jump = false
-		has_double_jumped = false
-		can_coyote_jump_flag = false  # Reset coyote jump when landing
-		left_ground_by_jumping = false  # Reset jump flag when landing
+		jumps_remaining = max_jumps  # Reset jumps when landing
+		can_coyote_jump_flag = false
+		left_ground_by_jumping = false
 		current_state = State.IDLE if abs(velocity.x) < 10 else State.RUNNING
 	
 	was_on_floor = is_on_floor()
@@ -92,30 +78,24 @@ func update_timers(delta: float):
 		jump_buffer_timer -= delta
 
 func handle_coyote_time():
-	# When leaving the ground, start coyote timer only if we didn't jump
 	if was_on_floor and not is_on_floor():
 		if not left_ground_by_jumping:
-			print("Left ground by walking - starting coyote timer")
 			coyote_timer = coyote_time
-			can_coyote_jump_flag = true  # Allow coyote jumping only if we didn't jump
+			can_coyote_jump_flag = true
 		else:
-			print("Left ground by jumping - no coyote time")
 			can_coyote_jump_flag = false
 		
-		# Enable double jump when leaving ground, but only if not already jumped
-		if not can_double_jump and not has_double_jumped:
-			can_double_jump = true
+		# Give jumps when leaving ground only if they haven't been used
+		if jumps_remaining == max_jumps and not left_ground_by_jumping:
+			jumps_remaining = max_jumps
 
 func handle_input():
 	var moving = Input.is_action_pressed(input_left) or Input.is_action_pressed(input_right)
 	
-	# Handle jump buffer
 	if Input.is_action_just_pressed(input_jump):
 		jump_buffer_timer = jump_buffer_time
 	
-	# Manual respawn for testing (press ESC key)
 	if Input.is_action_just_pressed("ui_cancel"):
-		print("Manual respawn triggered")
 		trigger_respawn()
 	
 	match current_state:
@@ -123,13 +103,10 @@ func handle_input():
 			if not is_on_floor():
 				current_state = State.FALLING
 			elif can_jump() and jump_buffer_timer > 0:
-				# Debug info
-				print("Jump pressed - is_on_floor: ", is_on_floor(), " coyote_timer: ", coyote_timer, " can_coyote_jump_flag: ", can_coyote_jump_flag)
-				# Check if we should do coyote jump or regular jump
 				if can_coyote_jump():
 					coyote_jump()
-				else:
-					regular_jump()
+				elif can_perform_jump():
+					perform_jump()
 				jump_buffer_timer = 0
 			elif Input.is_action_just_pressed(input_dash) and can_dash():
 				start_dash()
@@ -145,10 +122,8 @@ func handle_input():
 		
 		State.JUMPING, State.FALLING:
 			if can_jump() and jump_buffer_timer > 0:
-				if is_double_jump_available():
-					double_jump()
-				elif can_coyote_jump():
-					coyote_jump()
+				if can_perform_jump():
+					perform_jump()
 				jump_buffer_timer = 0
 			elif Input.is_action_just_pressed(input_dash) and can_dash():
 				start_dash()
@@ -156,9 +131,7 @@ func handle_input():
 				current_state = State.IDLE if abs(velocity.x) < 10 else State.RUNNING
 		
 		State.DASHING:
-			# Handle jump-cancel during dash
 			if can_jump() and jump_buffer_timer > 0:
-				print("Jump-canceling dash!")
 				cancel_dash_with_jump()
 				jump_buffer_timer = 0
 			else:
@@ -167,31 +140,19 @@ func handle_input():
 					current_state = State.FALLING if not is_on_floor() else State.IDLE
 
 func cancel_dash_with_jump():
-	# Stop the dash
 	dash_timer = 0.0
-	
-	# Preserve horizontal momentum from dash (optional - you can remove this if you want)
-	var horizontal_momentum = velocity.x * 0.5  # Reduce momentum by half
-	
-	# Apply jump velocity
+	var horizontal_momentum = velocity.x * 0.5
 	velocity.y = jump_velocity
 	velocity.x = horizontal_momentum
 	
-	# Set appropriate jump state
-	if is_double_jump_available():
-		# If we can double jump, use it
-		has_double_jumped = true
-		can_double_jump = false
-		print("Dash canceled with double jump!")
+	if can_perform_jump():
+		perform_jump()
 	elif can_coyote_jump():
-		# If we can coyote jump, use it
 		coyote_jump()
-		return  # coyote_jump() handles state change
+		return
 	else:
-		# Regular jump state
-		can_double_jump = true
-		has_double_jumped = false
-		print("Dash canceled with regular jump!")
+		# No jumps available, just preserve momentum
+		pass
 	
 	left_ground_by_jumping = true
 	current_state = State.JUMPING
@@ -216,9 +177,6 @@ func check_screen_boundaries():
 	)
 	
 	if is_outside:
-		print("Player left screen at position: ", player_pos)
-		print("Screen rect: ", screen_rect)
-		print("Boundary action: ", screen_boundary_action)
 		player_left_screen.emit()
 		handle_screen_boundary()
 
@@ -234,48 +192,30 @@ func handle_screen_boundary():
 			pass
 
 func trigger_respawn():
-	print("=== RESPAWN TRIGGERED ===")
-	print("Setting respawn flag")
 	respawn_flag = true
 
 func force_respawn():
-	print("=== FORCE RESPAWN EXECUTING ===")
-	print("Before: position =", position, "global_position =", global_position)
-	
-	# Stop all movement and reset state
 	velocity = Vector2.ZERO
 	current_state = State.IDLE
-	can_double_jump = false
-	has_double_jumped = false
+	jumps_remaining = max_jumps
 	can_coyote_jump_flag = false
-	left_ground_by_jumping = false  # Reset jump flag
+	left_ground_by_jumping = false
 	dash_cooldown_timer = 0.0
 	dash_timer = 0.0
-	coyote_timer = 0.0  # Clear coyote timer
+	coyote_timer = 0.0
 	jump_buffer_timer = 0.0
 	
-	# Force position to respawn point
 	global_position = respawn_position
-	
-	# Call move_and_slide to update physics state
 	move_and_slide()
-	
-	# IMPORTANT: Set was_on_floor to match the actual floor state after respawn
 	was_on_floor = is_on_floor()
 	
-	# Force update state based on actual floor detection
 	if is_on_floor():
 		current_state = State.IDLE
 	else:
 		current_state = State.FALLING
 	
-	print("After: position =", position, "global_position =", global_position, "is_on_floor =", is_on_floor())
-	
-	# Clear the respawn flag
 	respawn_flag = false
-	
 	player_respawned.emit()
-	print("=== RESPAWN COMPLETE ===")
 
 func clamp_to_screen():
 	var camera = get_viewport().get_camera_2d()
@@ -307,13 +247,11 @@ func wrap_around_screen():
 	else:
 		screen_rect = Rect2(Vector2.ZERO, screen_size)
 	
-	# Wrap horizontally
 	if global_position.x < screen_rect.position.x:
 		global_position.x = screen_rect.position.x + screen_rect.size.x
 	elif global_position.x > screen_rect.position.x + screen_rect.size.x:
 		global_position.x = screen_rect.position.x
 	
-	# Wrap vertically
 	if global_position.y < screen_rect.position.y:
 		global_position.y = screen_rect.position.y + screen_rect.size.y
 	elif global_position.y > screen_rect.position.y + screen_rect.size.y:
@@ -322,43 +260,35 @@ func wrap_around_screen():
 func can_jump() -> bool:
 	return Input.is_action_just_pressed(input_jump)
 
-func is_double_jump_available() -> bool:
-	return can_double_jump and not has_double_jumped
+func can_perform_jump() -> bool:
+	return jumps_remaining > 0
 
 func can_coyote_jump() -> bool:
-	var result = coyote_timer > 0 and can_coyote_jump_flag
-	if result:
-		print("Coyote jump available - timer: ", coyote_timer, " flag: ", can_coyote_jump_flag)
-	return result
+	return coyote_timer > 0 and can_coyote_jump_flag
 
 func can_dash() -> bool:
 	return dash_cooldown_timer <= 0
 
 func regular_jump():
-	print("Regular jump")
-	velocity.y = jump_velocity
-	can_double_jump = true
-	has_double_jumped = false
-	left_ground_by_jumping = true  # Mark that we left ground by jumping
+	perform_jump()
+
+func perform_jump():
+	# Calculate jump strength based on remaining jumps (first jump stronger)
+	var jump_strength = jump_velocity * (0.7 + (jumps_remaining * 0.15))
+	velocity.y = jump_strength
+	jumps_remaining -= 1
+	left_ground_by_jumping = true
 	current_state = State.JUMPING
 
 func coyote_jump():
-	print("Coyote jump!")
 	velocity.y = jump_velocity
-	can_double_jump = true
-	has_double_jumped = false
-	can_coyote_jump_flag = false  # Disable coyote jumping after use
-	coyote_timer = 0  # Clear timer
-	left_ground_by_jumping = true  # Mark that we left ground by jumping
+	jumps_remaining = max_jumps - 1  # Use one jump for coyote jump
+	can_coyote_jump_flag = false
+	coyote_timer = 0
+	left_ground_by_jumping = true
 	current_state = State.JUMPING
 
-func double_jump():
-	print("Double jump!")
-	velocity.y = jump_velocity * 0.8
-	has_double_jumped = true
-	can_double_jump = false
-	left_ground_by_jumping = true  # Mark that we left ground by jumping
-	current_state = State.JUMPING
+
 
 func update_movement(delta: float):
 	var direction = Input.get_axis(input_left, input_right)
@@ -402,11 +332,9 @@ func start_dash():
 	dash_cooldown_timer = dash_cooldown
 	current_state = State.DASHING
 
-# Checkpoint system
 func set_checkpoint(new_position: Vector2):
 	respawn_position = new_position
 	checkpoint_reached.emit(new_position)
-	print("Checkpoint set at: ", new_position)
 
 func set_checkpoint_to_current_position():
 	set_checkpoint(global_position)
