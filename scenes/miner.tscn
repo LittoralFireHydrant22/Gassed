@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://bl6krdaiw2htf"]
 
 [ext_resource type="Texture2D" uid="uid://bq6vo0ctvh8px" path="res://sprites/Miner Sprite (2).png" id="1_jkhbc"]
-[ext_resource type="Script" uid="uid://mbaocgyg1a76" path="res://sprites/miner.gd" id="1_kupx0"]
+[ext_resource type="Script" uid="uid://mbaocgyg1a76" path="res://scripts/miner.gd" id="1_kupx0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ij6vw"]
 atlas = ExtResource("1_jkhbc")
