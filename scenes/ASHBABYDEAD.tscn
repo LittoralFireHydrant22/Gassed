@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://dbj0p7dssvhg4"]
+
+[ext_resource type="Texture2D" uid="uid://bydexi7ncejje" path="res://sprites/POMPEII BABY.jpg" id="1_0yq3v"]
+[ext_resource type="Script" uid="uid://b551g4q1q4p3m" path="res://scripts/ashbabybabyohhyeahh.gd" id="2_y8u8t"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(577.5, 324.5)
+scale = Vector2(5.03493, 2.95)
+texture = ExtResource("1_0yq3v")
+
+[node name="ASHBABYBABYOHHYEAHH" type="Button" parent="."]
+offset_right = 1156.0
+offset_bottom = 656.0
+flat = true
+script = ExtResource("2_y8u8t")
+
+[connection signal="pressed" from="ASHBABYBABYOHHYEAHH" to="ASHBABYBABYOHHYEAHH" method="_on_pressed"]

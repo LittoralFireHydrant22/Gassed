@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://b7si5m8cq28pt"]
+
+[ext_resource type="Script" uid="uid://clcfrvt7edirx" path="res://gas.gd" id="1_cvn2w"]
+[ext_resource type="Texture2D" uid="uid://cfujfj5agjwwb" path="res://sprites/gas_more_pixelated.png" id="1_r4d2q"]
+
+[node name="gas" type="Node2D"]
+script = ExtResource("1_cvn2w")
+
+[node name="GasMorePixelated" type="Sprite2D" parent="."]
+position = Vector2(1105, 596)
+scale = Vector2(0.0502604, 0.0540509)
+texture = ExtResource("1_r4d2q")
+
+[node name="GasMorePixelated2" type="Sprite2D" parent="."]
+position = Vector2(1089.72, 630.529)
+rotation = 0.418879
+scale = Vector2(0.0123286, 0.0219519)
+texture = ExtResource("1_r4d2q")
+
+[node name="GasMorePixelated3" type="Sprite2D" parent="."]
+position = Vector2(1112, 640.25)
+scale = Vector2(0.0352864, 0.0143518)
+texture = ExtResource("1_r4d2q")

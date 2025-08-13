@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dfwb5sj88t2ot"]
 
 [ext_resource type="Texture2D" uid="uid://bet78rfdr4upc" path="res://sprites/gas  mask.png" id="1_5jhbu"]
-[ext_resource type="Script" uid="uid://bymia8y66d40t" path="res://scenes/gas_mask.gd" id="2_dgs3m"]
+[ext_resource type="Script" uid="uid://bymia8y66d40t" path="res://gas_mask.gd" id="2_dgs3m"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dgs3m"]
 size = Vector2(900, 777.778)
