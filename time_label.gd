@@ -10,7 +10,6 @@ var is_running: bool = false
 signal timer_finished
 
 func _ready():
-	print("Timer script loaded successfully")
 	time_remaining = countdown_minutes * 60.0
 	
 	# Style the timer
@@ -30,7 +29,6 @@ func _process(delta):
 			time_remaining = 0
 			is_running = false
 			timer_finished.emit()
-			print("TIME'S UP!")
 		
 		update_display()
 
@@ -47,13 +45,10 @@ func update_display():
 	else:
 		modulate = Color.WHITE
 
-# This is the function you're trying to call
 func start_timer():
-	print("start_timer() called!")
 	is_running = true
 	
 func stop_timer():
-	print("Timer stopped")
 	is_running = false
 
 func reset_timer():

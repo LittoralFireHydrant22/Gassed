@@ -1,9 +1,28 @@
-[gd_scene load_steps=2 format=3 uid="uid://no1agd28rr3"]
+[gd_scene load_steps=3 format=3 uid="uid://no1agd28rr3"]
 
+[ext_resource type="Script" uid="uid://2cl7f30sa3ku" path="res://gas_inventory.gd" id="1_a7pkp"]
 [ext_resource type="Texture2D" uid="uid://bet78rfdr4upc" path="res://sprites/gas  mask.png" id="1_c6ao6"]
 
-[node name="gas_inventory" type="Node2D"]
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_a7pkp")
 
-[node name="GasMask" type="Sprite2D" parent="."]
+[node name="CounterLabeK" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="MaskIcon1" type="Sprite2D" parent="."]
+scale = Vector2(0.03, 0.03)
+texture = ExtResource("1_c6ao6")
+
+[node name="MaskIcon2" type="Sprite2D" parent="."]
+scale = Vector2(0.03, 0.03)
+texture = ExtResource("1_c6ao6")
+
+[node name="MaskIcon3" type="Sprite2D" parent="."]
 scale = Vector2(0.03, 0.03)
 texture = ExtResource("1_c6ao6")

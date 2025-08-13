@@ -85,26 +85,22 @@ func start_timer():
 		is_running = true
 		is_paused = false
 		timer_started.emit()
-		print("Elapsed timer started")
 
 func stop_timer():
 	if is_running:
 		is_running = false
 		is_paused = false
 		timer_stopped.emit(elapsed_time)
-		print("Elapsed timer stopped at: ", get_formatted_time())
 
 func pause_timer():
 	if is_running and not is_paused:
 		is_paused = true
 		timer_paused.emit()
-		print("Elapsed timer paused at: ", get_formatted_time())
 
 func resume_timer():
 	if is_running and is_paused:
 		is_paused = false
 		timer_resumed.emit()
-		print("Elapsed timer resumed")
 
 func reset_timer():
 	elapsed_time = 0.0
@@ -112,7 +108,6 @@ func reset_timer():
 	is_paused = false
 	update_display()
 	timer_reset.emit()
-	print("Elapsed timer reset")
 
 func restart_timer():
 	reset_timer()
@@ -148,10 +143,8 @@ func subtract_time(bonus_seconds: float):
 	# For speedrun bonuses (makes time better)
 	elapsed_time = max(0, elapsed_time - bonus_seconds)
 	update_display()
-	print("Time bonus! -", bonus_seconds, " seconds")
 
 func add_time_penalty(penalty_seconds: float):
 	# For penalties (makes time worse)
 	elapsed_time += penalty_seconds
 	update_display()
-	print("Time penalty! +", penalty_seconds, " seconds")
