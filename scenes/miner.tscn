@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bl6krdaiw2htf"]
+[gd_scene load_steps=8 format=3 uid="uid://bl6krdaiw2htf"]
 
 [ext_resource type="Texture2D" uid="uid://bq6vo0ctvh8px" path="res://sprites/Miner Sprite (2).png" id="1_jkhbc"]
 [ext_resource type="Script" uid="uid://mbaocgyg1a76" path="res://scripts/miner.gd" id="1_kupx0"]
@@ -29,6 +29,9 @@ animations = [{
 radius = 8.0
 height = 26.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qcpy4"]
+size = Vector2(43, 45)
+
 [node name="miner" type="CharacterBody2D"]
 script = ExtResource("1_kupx0")
 
@@ -42,3 +45,13 @@ frame_progress = 0.725662
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-21, 21)
 shape = SubResource("CapsuleShape2D_dd465")
+
+[node name="IneractionArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="IneractionArea"]
+position = Vector2(-22, 19)
+shape = SubResource("RectangleShape2D_qcpy4")
+
+[node name="InteractionPrompt" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0

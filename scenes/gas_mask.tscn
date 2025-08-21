@@ -7,7 +7,8 @@
 size = Vector2(900, 777.778)
 
 [node name="GasMask" type="Sprite2D"]
-scale = Vector2(0.02, 0.018)
+z_index = 100
+scale = Vector2(0.02, 0.02)
 texture = ExtResource("1_5jhbu")
 script = ExtResource("2_dgs3m")
 
