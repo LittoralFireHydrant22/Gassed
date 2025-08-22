@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://dxm7dgdlm5k1d"]
+[gd_scene load_steps=18 format=4 uid="uid://dxm7dgdlm5k1d"]
 
 [ext_resource type="Texture2D" uid="uid://cc00wag3qhqcv" path="res://Tileset/Mine tilemap/Mine.png" id="1_g2h75"]
 [ext_resource type="PackedScene" uid="uid://bj5n44w2p6g03" path="res://player.tscn" id="2_wwpf4"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bxnnmxyo68k1p" path="res://timer.tscn" id="7_ejswk"]
 [ext_resource type="PackedScene" uid="uid://no1agd28rr3" path="res://gas_inventory.tscn" id="8_bbk5w"]
 [ext_resource type="Script" uid="uid://kldce7f1wqwx" path="res://scenes/gas_mask_spawner.gd" id="9_conm7"]
+[ext_resource type="PackedScene" uid="uid://binwjsdy1rfpb" path="res://leftminer.tscn" id="10_d3jkd"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wwpf4"]
 texture = ExtResource("1_g2h75")
@@ -309,11 +310,6 @@ layer_0/tile_data = PackedInt32Array(5177400, 196608, 7)
 
 [node name="Miner_holder" type="Node2D" parent="Holder"]
 
-[node name="miner4" parent="Holder/Miner_holder" instance=ExtResource("3_m7ahb")]
-position = Vector2(1048, 36)
-rotation = 3.14159
-scale = Vector2(1, -1)
-
 [node name="miner3" parent="Holder/Miner_holder" instance=ExtResource("3_m7ahb")]
 position = Vector2(1154, 38)
 
@@ -323,18 +319,8 @@ position = Vector2(1151, 326)
 [node name="miner" parent="Holder/Miner_holder" instance=ExtResource("3_m7ahb")]
 position = Vector2(713, 15)
 
-[node name="miner 1" parent="Holder/Miner_holder" instance=ExtResource("3_m7ahb")]
-position = Vector2(3, 560)
-rotation = 3.14159
-scale = Vector2(1, -1)
-
 [node name="miner5" parent="Holder/Miner_holder" instance=ExtResource("3_m7ahb")]
 position = Vector2(1147, 588)
-
-[node name="miner6" parent="Holder/Miner_holder" instance=ExtResource("3_m7ahb")]
-position = Vector2(451, 302)
-rotation = 3.14159
-scale = Vector2(1, -1)
 
 [node name="gas_holder" type="Node2D" parent="Holder"]
 
@@ -388,6 +374,15 @@ position = Vector2(100, 100)
 
 [node name="GasMask" parent="." instance=ExtResource("5_6sh32")]
 position = Vector2(756, 361)
+
+[node name="miner" parent="." instance=ExtResource("10_d3jkd")]
+position = Vector2(493, 304)
+
+[node name="miner2" parent="." instance=ExtResource("10_d3jkd")]
+position = Vector2(1095, 40)
+
+[node name="miner3" parent="." instance=ExtResource("10_d3jkd")]
+position = Vector2(50, 560)
 
 [connection signal="body_entered" from="Holder/gas_holder/ASHBABYGAS" to="Holder/gas_holder/ASHBABYGAS" method="_on_ashbabygas_body_entered"]
 [connection signal="child_entered_tree" from="Holder/gas_holder/ASHBABYGAS/CollisionShape2D" to="player" method="_on_collision_shape_2d_child_entered_tree"]

@@ -1,17 +1,17 @@
-[gd_scene load_steps=14 format=3 uid="uid://bl6krdaiw2htf"]
+[gd_scene load_steps=14 format=3 uid="uid://binwjsdy1rfpb"]
 
-[ext_resource type="Texture2D" uid="uid://bq6vo0ctvh8px" path="res://sprites/Miner Sprite (2).png" id="1_jkhbc"]
-[ext_resource type="Script" uid="uid://mbaocgyg1a76" path="res://scripts/miner.gd" id="1_kupx0"]
-[ext_resource type="Texture2D" uid="uid://buhiha4pwr8bc" path="res://Miner explanation mark.png" id="3_8so5f"]
-[ext_resource type="Script" uid="uid://bqg8hnpxfvrhx" path="res://scenes/exclamationmark.gd" id="3_hrgr1"]
-[ext_resource type="Script" uid="uid://bs7yv5ywboi12" path="res://scenes/exclamation.gd" id="5_4ve7c"]
+[ext_resource type="Script" uid="uid://mbaocgyg1a76" path="res://scripts/miner.gd" id="1_ukotr"]
+[ext_resource type="Texture2D" uid="uid://bq6vo0ctvh8px" path="res://sprites/Miner Sprite (2).png" id="2_a6b0q"]
+[ext_resource type="Texture2D" uid="uid://buhiha4pwr8bc" path="res://Miner explanation mark.png" id="3_a6b0q"]
+[ext_resource type="Script" uid="uid://bqg8hnpxfvrhx" path="res://scenes/exclamationmark.gd" id="3_m8jcg"]
+[ext_resource type="Script" uid="uid://bs7yv5ywboi12" path="res://scenes/exclamation.gd" id="5_tuj7h"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ij6vw"]
-atlas = ExtResource("1_jkhbc")
+atlas = ExtResource("2_a6b0q")
 region = Rect2(0, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ghijl"]
-atlas = ExtResource("1_jkhbc")
+atlas = ExtResource("2_a6b0q")
 region = Rect2(0, 64, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_44cfe"]
@@ -36,14 +36,14 @@ height = 26.0
 size = Vector2(43, 45)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qxqb1"]
-atlas = ExtResource("3_8so5f")
+atlas = ExtResource("3_a6b0q")
 region = Rect2(0, 0, 128, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hrgr1"]
-atlas = ExtResource("3_8so5f")
+atlas = ExtResource("3_a6b0q")
 region = Rect2(0, 128, 128, 128)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_4ve7c"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_ky6ok"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -58,11 +58,11 @@ animations = [{
 }]
 
 [node name="miner" type="CharacterBody2D"]
-script = ExtResource("1_kupx0")
+script = ExtResource("1_ukotr")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-21.5, 21)
-scale = Vector2(0.328125, 0.34375)
+scale = Vector2(-0.328, 0.344)
 sprite_frames = SubResource("SpriteFrames_44cfe")
 animation = &"mining"
 frame_progress = 0.725662
@@ -85,9 +85,8 @@ metadata/_edit_use_anchors_ = true
 [node name="Node2D" type="Node2D" parent="."]
 position = Vector2(-22, -6)
 scale = Vector2(0.277344, 0.175781)
-script = ExtResource("3_hrgr1")
+script = ExtResource("3_m8jcg")
 
 [node name="exclamation" type="AnimatedSprite2D" parent="Node2D"]
-sprite_frames = SubResource("SpriteFrames_4ve7c")
-frame_progress = 0.468624
-script = ExtResource("5_4ve7c")
+sprite_frames = SubResource("SpriteFrames_ky6ok")
+script = ExtResource("5_tuj7h")
