@@ -57,7 +57,7 @@ animations = [{
 "speed": 1.5
 }]
 
-[node name="miner" type="CharacterBody2D"]
+[node name="miner" type="CharacterBody2D" groups=["miners"]]
 script = ExtResource("1_kupx0")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

@@ -190,25 +190,14 @@ func dissipate_gas():
 	gas_script.reload()
 	gas_cloud.set_script(gas_script)
 	
-	# Add sprite
+	# Add sprite with YOUR existing gas texture
 	var sprite = Sprite2D.new()
 	sprite.name = "GasSprite"
+	
+	# Use your existing gas sprite texture - change this path to match your gas sprite
+	sprite.texture = preload("res://GasCloud.tscn")  # UPDATE THIS PATH!
+	
 	gas_cloud.add_child(sprite)
-	
-	# Create a simple gas texture
-	var texture = ImageTexture.new()
-	var image = Image.create(100, 100, false, Image.FORMAT_RGBA8)
-	
-	# Create a simple green circle for gas
-	for x in range(100):
-		for y in range(100):
-			var distance = Vector2(x - 50, y - 50).length()
-			if distance <= 50:
-				var alpha = 1.0 - (distance / 50.0)
-				image.set_pixel(x, y, Color(0, 1, 0, alpha * 0.6))
-	
-	texture.set_image(image)
-	sprite.texture = texture
 	
 	# Add collision shape
 	var collision = CollisionShape2D.new()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://dxm7dgdlm5k1d"]
+[gd_scene load_steps=20 format=4 uid="uid://dxm7dgdlm5k1d"]
 
 [ext_resource type="Texture2D" uid="uid://cc00wag3qhqcv" path="res://Tileset/Mine tilemap/Mine.png" id="1_g2h75"]
 [ext_resource type="PackedScene" uid="uid://bj5n44w2p6g03" path="res://player.tscn" id="2_wwpf4"]
@@ -10,6 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://no1agd28rr3" path="res://gas_inventory.tscn" id="8_bbk5w"]
 [ext_resource type="Script" uid="uid://kldce7f1wqwx" path="res://scenes/gas_mask_spawner.gd" id="9_conm7"]
 [ext_resource type="PackedScene" uid="uid://binwjsdy1rfpb" path="res://leftminer.tscn" id="10_d3jkd"]
+[ext_resource type="Script" uid="uid://ch8x6o87hi8ib" path="res://scenes/node_2d.gd" id="11_u3awl"]
+[ext_resource type="Texture2D" uid="uid://be2hvi6ro3iuy" path="res://sprites/gas.png" id="12_2ku1j"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wwpf4"]
 texture = ExtResource("1_g2h75")
@@ -310,6 +312,15 @@ layer_0/tile_data = PackedInt32Array(5177400, 196608, 7)
 
 [node name="Miner_holder" type="Node2D" parent="Holder"]
 
+[node name="miner7" parent="Holder/Miner_holder" instance=ExtResource("10_d3jkd")]
+position = Vector2(50, 560)
+
+[node name="miner6" parent="Holder/Miner_holder" instance=ExtResource("10_d3jkd")]
+position = Vector2(1095, 40)
+
+[node name="miner4" parent="Holder/Miner_holder" instance=ExtResource("10_d3jkd")]
+position = Vector2(493, 304)
+
 [node name="miner3" parent="Holder/Miner_holder" instance=ExtResource("3_m7ahb")]
 position = Vector2(1154, 38)
 
@@ -352,6 +363,12 @@ position = Vector2(46, 33)
 [node name="GasMask2" parent="Holder/gas mask holder" instance=ExtResource("5_6sh32")]
 position = Vector2(582, 147)
 
+[node name="GasMask3" parent="Holder/gas mask holder" instance=ExtResource("5_6sh32")]
+position = Vector2(756, 361)
+
+[node name="GasMask4" parent="Holder/gas mask holder" instance=ExtResource("5_6sh32")]
+position = Vector2(200, 419)
+
 [node name="Control" parent="." instance=ExtResource("7_ejswk")]
 offset_left = 987.0
 offset_top = 20.0
@@ -364,25 +381,21 @@ offset_top = 33.0
 offset_right = 874.0
 offset_bottom = 73.0
 
-[node name="GasMaskSpawner" type="Node2D" parent="." node_paths=PackedStringArray("spawn_points")]
+[node name="GasMaskSpawner" type="Node2D" parent="."]
 script = ExtResource("9_conm7")
-gas_mask_scene = ExtResource("5_6sh32")
-spawn_points = [NodePath("../SpawnPoint1")]
 
 [node name="SpawnPoint1" type="Marker2D" parent="."]
 position = Vector2(100, 100)
 
-[node name="GasMask" parent="." instance=ExtResource("5_6sh32")]
-position = Vector2(756, 361)
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2(100, 100)
+script = ExtResource("11_u3awl")
 
-[node name="miner" parent="." instance=ExtResource("10_d3jkd")]
-position = Vector2(493, 304)
-
-[node name="miner2" parent="." instance=ExtResource("10_d3jkd")]
-position = Vector2(1095, 40)
-
-[node name="miner3" parent="." instance=ExtResource("10_d3jkd")]
-position = Vector2(50, 560)
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.140447, 0.140447, 0.140447, 1)
+position = Vector2(559, 341)
+scale = Vector2(0.794792, 0.713426)
+texture = ExtResource("12_2ku1j")
 
 [connection signal="body_entered" from="Holder/gas_holder/ASHBABYGAS" to="Holder/gas_holder/ASHBABYGAS" method="_on_ashbabygas_body_entered"]
 [connection signal="child_entered_tree" from="Holder/gas_holder/ASHBABYGAS/CollisionShape2D" to="player" method="_on_collision_shape_2d_child_entered_tree"]

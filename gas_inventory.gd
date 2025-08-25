@@ -115,7 +115,7 @@ func _find_gas_mask_nodes(node: Node, result_array: Array):
 
 # Example: Connect to pickup area
 func _on_pickup_area_entered(body):
-	if body.name == "Player":
+	if body.name == "player":
 		add_gas_mask()
 
 # Example: Connect to use input
