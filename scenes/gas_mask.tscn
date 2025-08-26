@@ -15,5 +15,4 @@ script = ExtResource("2_dgs3m")
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(-2.68221e-05, -1.32455e-05)
 shape = SubResource("RectangleShape2D_dgs3m")

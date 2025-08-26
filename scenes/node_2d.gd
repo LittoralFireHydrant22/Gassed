@@ -154,7 +154,16 @@ func _on_body_entered(body):
 		entity_timer.timeout.connect(func(): kill_entity_if_still_in_gas(body))
 		entity_timer.start()
 		entity_timers[body] = entity_timer
-		if body.has_method("set_modulate"):
+		
+		# Try to find and color the exclamation mark red instead of the whole entity
+		var exclamation_mark = body.get_node_or_null("exclamation")
+		if exclamation_mark and exclamation_mark.has_method("set_modulate"):
+			exclamation_mark.modulate = Color.RED
+		elif body.has_method("enter_gas_cloud"):
+			# If miner has a custom method to handle gas exposure
+			body.enter_gas_cloud()
+		elif body.has_method("set_modulate"):
+			# Fallback to coloring the whole entity green
 			body.modulate = Color.GREEN
 
 func _on_body_exited(body):
@@ -165,7 +174,16 @@ func _on_body_exited(body):
 			if is_instance_valid(timer):
 				timer.queue_free()
 			entity_timers.erase(body)
-		if is_instance_valid(body) and body.has_method("set_modulate"):
+		
+		# Reset the exclamation mark color or use custom method
+		var exclamation_mark = body.get_node_or_null("exclamation")
+		if exclamation_mark and exclamation_mark.has_method("set_modulate"):
+			exclamation_mark.modulate = Color.WHITE
+		elif is_instance_valid(body) and body.has_method("exit_gas_cloud"):
+			# If miner has a custom method to handle exiting gas
+			body.exit_gas_cloud()
+		elif is_instance_valid(body) and body.has_method("set_modulate"):
+			# Fallback to resetting the whole entity color
 			body.modulate = Color.WHITE
 
 func kill_entity_if_still_in_gas(entity):
@@ -195,7 +213,14 @@ func dissipate_gas():
 	sprite.name = "GasSprite"
 	
 	# Use your existing gas sprite texture - change this path to match your gas sprite
-	sprite.texture = preload("res://GasCloud.tscn")  # UPDATE THIS PATH!
+	# Note: You'll need to change this to load an actual texture file, not a scene
+	# sprite.texture = preload("res://path_to_your_gas_texture.png")  # UPDATE THIS PATH!
+	# For now, creating a simple colored rectangle as placeholder:
+	var image = Image.create(100, 100, false, Image.FORMAT_RGBA8)
+	image.fill(Color.GREEN)
+	var texture = ImageTexture.new()
+	texture.set_image(image)
+	sprite.texture = texture
 	
 	gas_cloud.add_child(sprite)
 	
@@ -213,8 +238,4 @@ func _on_miner_killed(miner):
 	print("Miner killed by gas: ", miner.name)
 	# Add score, statistics, or other game logic here
 
-# Manual spawn function for testing
-func spawn_gas_at_player():
-	var player = get_tree().get_first_node_in_group("player")
-	if player:
-		spawn_gas_cloud(player.global_position)
+# Manual
