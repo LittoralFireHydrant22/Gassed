@@ -4,9 +4,9 @@ extends Node
 @onready var spawn_timer: Timer = Timer.new()
 
 # Spawn settings
-const MIN_SPAWN_TIME: float = 15.0
-const MAX_SPAWN_TIME: float = 45.0
-const GAS_SPAWN_CHANCE: float = 0.7  # 70% chance to spawn gas when timer triggers
+const MIN_SPAWN_TIME: float = 10.0
+const MAX_SPAWN_TIME: float = 30.0
+const GAS_SPAWN_CHANCE: float = 0.8  # 70% chance to spawn gas when timer triggers
 
 func _ready():
 	# We'll create gas clouds manually instead of loading a scene file
@@ -208,20 +208,38 @@ func dissipate_gas():
 	gas_script.reload()
 	gas_cloud.set_script(gas_script)
 	
-	# Add sprite with YOUR existing gas texture
+	# Add sprite with the texture from your GasCloud.tscn scene
 	var sprite = Sprite2D.new()
 	sprite.name = "GasSprite"
 	
-	# Use your existing gas sprite texture - change this path to match your gas sprite
-	# Note: You'll need to change this to load an actual texture file, not a scene
-	# sprite.texture = preload("res://path_to_your_gas_texture.png")  # UPDATE THIS PATH!
-	# For now, creating a simple colored rectangle as placeholder:
-	var image = Image.create(100, 100, false, Image.FORMAT_RGBA8)
-	image.fill(Color.GREEN)
-	var texture = ImageTexture.new()
-	texture.set_image(image)
-	sprite.texture = texture
+	# Load the actual gas cloud scene to extract its texture
+	var gas_scene = preload("res://GasCloud.tscn")
+	var temp_instance = gas_scene.instantiate()
 	
+	# Try to find the sprite in your GasCloud scene and copy its texture
+	var scene_sprite = temp_instance.get_node_or_null("GasSprite")
+	if not scene_sprite:
+		# Try other common sprite node names
+		scene_sprite = temp_instance.get_node_or_null("Sprite2D")
+	if not scene_sprite and temp_instance.get_child_count() > 0:
+		# Look for any Sprite2D child
+		for child in temp_instance.get_children():
+			if child is Sprite2D:
+				scene_sprite = child
+				break
+	
+	if scene_sprite and scene_sprite.texture:
+		sprite.texture = scene_sprite.texture
+	else:
+		# Fallback to a simple texture if we can't find the sprite
+		print("Warning: Could not find sprite texture in GasCloud.tscn")
+		var image = Image.create(100, 100, false, Image.FORMAT_RGBA8)
+		image.fill(Color(0.2, 0.8, 0.2, 0.5))  # Semi-transparent green
+		var texture = ImageTexture.new()
+		texture.set_image(image)
+		sprite.texture = texture
+	
+	temp_instance.queue_free()
 	gas_cloud.add_child(sprite)
 	
 	# Add collision shape
@@ -237,5 +255,3 @@ func dissipate_gas():
 func _on_miner_killed(miner):
 	print("Miner killed by gas: ", miner.name)
 	# Add score, statistics, or other game logic here
-
-# Manual

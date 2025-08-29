@@ -14,6 +14,10 @@ config/name="Gassed"
 run/main_scene="uid://doqjyhrceap1q"
 config/features=PackedStringArray("4.4", "Forward Plus")
 
+[display]
+
+window/stretch/mode="viewport"
+
 [input]
 
 ui_accept={
